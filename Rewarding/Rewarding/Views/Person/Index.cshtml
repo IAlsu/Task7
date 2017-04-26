@@ -1,0 +1,147 @@
+﻿@using Rewarding.Models
+@model IEnumerable<Rewarding.Models.Person>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Person/_LayoutPerson.cshtml";
+}
+
+@section styles{
+    @System.Web.Optimization.Styles.Render("~/Content/css")
+}
+
+@section breadcrumps{
+    You are here: @Html.MvcSiteMap().SiteMapPath()
+}
+<script>
+    $(function () {
+        var createDialog = function (selector) {
+            $(selector).dialog({
+                autoOpen: false,
+                show: {
+                    effect: "blind",
+                    duration: 1000
+                },
+                hide: {
+                    effect: "explode",
+                    duration: 1000
+                }
+            });
+        };
+
+        
+
+            //$( "#opener" ).on( "click", function() {
+            //  $( "#dialog" ).dialog( "open" );
+            //});
+          } );
+</script>
+
+@*<div id="dialog" title="Basic dialog">
+    <p>This is an animated dialog which is useful for displaying information. The dialog window can be moved, resized and closed with the 'x' icon.</p>
+</div>*@
+@*<button id="opener">Open Dialog</button>*@
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Birthdate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Age)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Rewards)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Photo)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Birthdate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Age)
+            </td>
+            <td>
+                @{
+                    foreach (var reward in item.Rewards)
+                    {
+                        <img class="img-thumbnail" width="50" height="50"
+                             src="@Url.Action("GetImage", "Images", new {imageId = reward.ImageId})" id=@reward.ImageId title=@reward.Title />
+                            <br />
+
+
+                        <script>
+                        $(function () {
+                            var createDialog = function (selector) {
+                                $(selector).dialog({
+                                    autoOpen: false,
+                                    show: {
+                                        effect: "blind",
+                                        duration: 1000
+                                    },
+                                    hide: {
+                                        effect: "explode",
+                                        duration: 1000
+                                    }
+                                });
+                            };
+
+                            createDialog("#@("dialog" + reward.ImageId)");
+
+                            $("#@reward.ImageId").on("click", function () {
+                                $("#@("dialog" + reward.ImageId)").dialog("open");
+                            });
+                        });
+                                                </script>
+
+                        <div id=@("dialog" + reward.ImageId) title="Basic dialog">
+                            <p>@reward.Description</p>
+                        </div>
+                                        }
+                }
+            </td>
+            <td>
+                @if (item.PhotoId == null)
+                {
+                    <div class="form-control-static">No photo</div>
+                }
+                else
+                {
+                    <img class="img-thumbnail" width="150" height="150"
+                         src="@Url.Action("GetImage", "Images",
+                        new {imageId = item.PhotoId })" />
+                }
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+            </td>
+        </tr>
+    }
+</table>
+
+<p>
+    @Html.ActionLink("Dowload list of people", "DownloadListOfPeople")
+</p>
+
+@section scripts {
+    <script src="~/Scripts/bootstrap.min.js"></script>
+}
